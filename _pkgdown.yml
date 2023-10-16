@@ -1,0 +1,10 @@
+destination: "../../websites/R/ppcli/"
+url: "https://trevorldavis.com/R/ppcli"
+development:
+    mode: auto
+reference:
+    - title: "Plaintext game diagrams"
+      desc: "Functions to generate plaintext game diagrams"
+      contents:
+        - cat_piece
+        - str_piece
