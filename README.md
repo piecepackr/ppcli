@@ -46,7 +46,7 @@ df <- tibble(piece_side = "tile_face",
              suit = c(4, 5, 0, 1, 1, 5, 4, 2, 5, 5, 6, 6, 4, 0) + 1,
              angle = c(0, 90, 0, 90, 0, 0, 0, 90, 90, 0, 0, 90, 0, 90),
              cfg = "dominoes_white")
-cat_piece(df, style = "game-bit-mono")
+cat_piece(df, style = "Game Bit Mono")
 ```
 
 ![Dominoes diagram](https://github.com/trevorld/game-bit-font/blob/main/png/dominoes_mono.png?raw=true)

@@ -333,7 +333,7 @@ piecepack_colors <- dice_colors <- chess_colors <- go_colors <- checkers_colors
 dice_colors[2] <- "grey"
 
 add_piece <- function(cm, piece_side, suit, rank, x, y, angle, cfg, reorient = "none", style = get_style()) {
-    if (piece_side %in% c("tile_back", "coin_face", "card_back")) {
+    if (piece_side %in% c("tile_back", "coin_face", "card_back", "board_face", "board_back")) {
         fg <- "black"
     } else {
         if (grepl("pyramid", piece_side)) cfg <- "icehouse_pieces"
@@ -342,10 +342,12 @@ add_piece <- function(cm, piece_side, suit, rank, x, y, angle, cfg, reorient = "
         else
             ss <- style$ss[[cfg]][suit]
         if (piece_side == "pyramid_top") ss <- top_subs[[ss]]
-        if (!grepl("matchstick", piece_side)) ss <- style$rotate(ss, angle, reorient)
+        if (!grepl("matchstick", piece_side))
+            ss <- style$rotate(ss, angle, reorient)
         fg <- style$fg[[cfg]][suit]
     }
-    if (!(piece_side %in% c("tile_back", "coin_back", "card_back", "pawn_face", "pawn_back"))) {
+    if (!(piece_side %in% c("tile_back", "coin_back", "card_back",
+                            "pawn_face", "pawn_back", "board_face", "board_back"))) {
         if (piece_side == "tile_face")
             rs <- style$rs_big[[cfg]][rank]
         else
