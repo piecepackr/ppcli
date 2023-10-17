@@ -2,7 +2,7 @@ Encoding: UTF-8
 Package: ppcli
 Type: Package
 Title: Plaintext Board Game Visualizations
-Version: 0.1.0-2
+Version: 0.1.0-3
 Authors@R: c(person("Trevor L", "Davis", role=c("aut", "cre"),
              email="trevor.l.davis@gmail.com",
              comment = c(ORCID = "0000-0001-6341-4639")))
@@ -14,7 +14,7 @@ BugReports: https://github.com/piecepackr/ppcli/issues
 LazyLoad: yes
 Depends: R (>= 3.4.0)
 Imports:
-    crayon,
+    cli,
     rlang,
     stringr,
     utils,

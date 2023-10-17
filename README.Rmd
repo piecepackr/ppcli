@@ -15,7 +15,7 @@
 ## <a name="overview">Overview</a>
 
 * `cat_piece()` prints out plaintext Unicode board game diagrams while `str_piece()` returns just the character vector.
-* Can optionally colorize output for the terminal using `{crayon}` or HTML using `fansi::sgr_to_html()`.
+* Can optionally colorize output for the terminal using `{cli}` or HTML using `fansi::sgr_to_html()`.
 * The board game data frame format used by this package is the same as:
 
   + The format expected by `piecepackr::pmap_piece()` or `piecepackr::render_piece()` for visualization
@@ -57,7 +57,7 @@ library("ppdf")
 cat_piece(piecepack_xiangqi())
 ```
 
-![Setup for playing Xiangqi with a piecepack](https://trevorldavis.com/share/piecepack/unicode_xiangqi.png){.align-center}
+![Setup for playing Xiangqi with a piecepack](https://trevorldavis.com/share/piecepack/unicode_xiangqi.png)
 
 ## <a name="faq">FAQ</a>
 

@@ -51,7 +51,6 @@ str_piece_helper <- function(df, color = NULL, reorient = "none", annotate = FAL
     nc <- 2 * (lr$xmax + offset$x) + 1
     nr <- 2 * (lr$ymax + offset$y) + 1
     cm <- list(char = matrix(style$space, nrow = nr, ncol = nc),
-               bg = matrix("#FFFFFF", nrow = nr, ncol = nc),
                fg = matrix("black", nrow = nr, ncol = nc))
 
     for (rr in seq(nrow(df))) {
@@ -66,12 +65,12 @@ str_piece_helper <- function(df, color = NULL, reorient = "none", annotate = FAL
     }
     cm <- annotate_text(cm, nc, nr, offset$x, offset$y, annotate, annotation_scale)
     cm <- color_text(cm, color)
-
     text <- rev(apply(cm$char, 1, function(x) paste(x, collapse = "")))
     text <- paste(text, collapse = "\n")
     if (color == "html") {
         assert_suggested("fansi")
         text <- fansi::sgr_to_html(text)
+        # text <- cli::ansi_html(text)
     }
     paste0(text, "\n")
 }
@@ -223,42 +222,56 @@ get_style_ss <- function(style, big = FALSE) {
     ss
 }
 
-get_style_fg <- function(style) {
-    fg <- list(piecepack = piecepack_colors,
-                    dual_piecepacks_expansion = piecepack_colors,
-                    playing_cards_expansion = piecepack_colors[c(1, 2, 2, 1)],
-                    subpack = piecepack_colors,
-                    chess1 = chess_colors,
-                    chess2 = chess_colors,
-                    checkers1 = checkers_colors,
-                    checkers2 = checkers_colors,
-                    dice = dice_colors,
-                    dice_fudge = dice_colors,
-                    dominoes = rep("black", 7),
-                    dominoes_black = rep(dice_colors[2], 7),
-                    dominoes_blue = rep(dice_colors[4], 7),
-                    dominoes_green = rep(dice_colors[3], 7),
-                    dominoes_red = rep(dice_colors[1], 7),
-                    dominoes_white = rep(dice_colors[6], 7),
-                    dominoes_yellow = rep(dice_colors[5], 7),
-                    icehouse_pieces = dice_colors,
-                    go = go_colors)
+# We usually use non-solid version of glyph for "white" hence "black" is appropriate
+# For dice/dominoe/icehouse pips use "br_black" as an hack for inability to do inverted black/white pips
+#### For Game Bit font style use inverted pip feature?
+suit_colors <- c("red", "black", "green", "blue", "yellow", "black")
+dice_colors <- suit_colors
+dice_colors[2] <- "br_black"
 
+get_style_fg <- function(style) {
+    fg <- list(piecepack = suit_colors,
+               dual_piecepacks_expansion = suit_colors,
+               playing_cards_expansion = suit_colors[c(1L, 2L, 2L, 1L)],
+               subpack = suit_colors,
+               chess1 = suit_colors,
+               chess2 = suit_colors,
+               checkers1 = suit_colors,
+               checkers2 = suit_colors,
+               dice = suit_colors,
+               dice_fudge = suit_colors,
+               dominoes = rep("black", 7L),
+               dominoes_black = rep(dice_colors[2L], 7L),
+               dominoes_blue = rep(dice_colors[4L], 7L),
+               dominoes_green = rep(dice_colors[3L], 7L),
+               dominoes_red = rep(dice_colors[1L], 7L),
+               dominoes_white = rep(dice_colors[6L], 7L),
+               dominoes_yellow = rep(dice_colors[5L], 7L),
+               icehouse_pieces = dice_colors,
+               go = suit_colors)
     fg
 }
 
 color_text <- function(cm, color) {
+    if (color == "html") # always colorize if we'll be converting to html
+        rlang::local_options(cli.num_colors = 256L)
     if (!isFALSE(color)) {
         for (rr in seq(nrow(cm$char))) {
             for (cc in seq(ncol(cm$char))) {
-                fg <- crayon::make_style(cm$fg[rr, cc])
-                bg <- crayon::make_style(cm$bg[rr, cc], bg = TRUE)
-                colorize <- crayon::combine_styles(fg, bg)
+                fg <- col_cli(cm$fg[rr, cc])
+                colorize <- cli::combine_ansi_styles(fg, cli::bg_br_white)
                 cm$char[rr, cc] <- colorize(cm$char[rr, cc])
             }
         }
     }
     cm
+}
+
+col_cli <- function(col = c("black", "blue", "cyan", "green", "magenta", "red", "white", "yellow",
+                            "grey", "silver", "none",
+                            "br_black", "br_blue", "br_cyan", "br_green", "br_red", "br_white", "br_yellow")) {
+    col <- match.arg(col)
+    utils::getFromNamespace(paste0("col_", col), "cli")
 }
 
 annotate_text <- function(cm, nc, nr, xoffset, yoffset, annotate, annotation_scale) {
@@ -325,12 +338,6 @@ min2offset <- function(min, lbound = 0.5) {
     }
 }
 
-
-#### darkgreen sometimes shows up as black?
-#### black instead of grey sometimes?
-checkers_colors <- c("darkred", "black", "green", "darkblue", "darkorange3", "black")
-piecepack_colors <- dice_colors <- chess_colors <- go_colors <- checkers_colors
-dice_colors[2] <- "grey"
 
 add_piece <- function(cm, piece_side, suit, rank, x, y, angle, cfg, reorient = "none", style = get_style()) {
     if (piece_side %in% c("tile_back", "coin_face", "card_back", "board_face", "board_back")) {
