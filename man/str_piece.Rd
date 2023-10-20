@@ -35,7 +35,7 @@ with \dQuote{algrebraic} coordinates,
 if \code{FALSE} or \code{"none"} don't annotate,
 if \code{"cartesian"} annotate the plot with \dQuote{cartesian} coordinates.}
 
-\item{...}{Currently ignored.}
+\item{...}{Mainly ignored except for a couple of undocumented features.}
 
 \item{annotation_scale}{Multiplicative factor that scales (stretches) any annotation coordinates.
 By default uses \code{attr(df, "scale_factor") \%||\% 1}.}

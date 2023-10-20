@@ -18,7 +18,7 @@
 #'                  with \dQuote{algrebraic} coordinates,
 #'                 if `FALSE` or `"none"` don't annotate,
 #'                 if `"cartesian"` annotate the plot with \dQuote{cartesian} coordinates.
-#' @param ... Currently ignored.
+#' @param ... Mainly ignored except for a couple of undocumented features.
 #' @param annotation_scale Multiplicative factor that scales (stretches) any annotation coordinates.
 #'                         By default uses `attr(df, "scale_factor") %||% 1`.
 #' @param style If "Unicode" (default) only use glyphs in Unicode proper.
@@ -271,7 +271,7 @@ col_cli <- function(col = c("black", "blue", "cyan", "green", "magenta", "red", 
                             "grey", "silver", "none",
                             "br_black", "br_blue", "br_cyan", "br_green", "br_red", "br_white", "br_yellow")) {
     col <- match.arg(col)
-    utils::getFromNamespace(paste0("col_", col), "cli")
+    get(paste0("col_", col), envir = getNamespace("cli"))
 }
 
 annotate_text <- function(cm, nc, nr, xoffset, yoffset, annotate, annotation_scale) {
