@@ -1,5 +1,5 @@
-ppcli 0.1.0 (development)
-=========================
+ppcli 0.1.1
+===========
 
 * ``cat_piece()`` prints out Unicode plaintext boardgame diagrams.
 

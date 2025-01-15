@@ -1,7 +1,7 @@
 # ppcli
 
 [![CRAN Status Badge](https://www.r-pkg.org/badges/version/ppcli)](https://cran.r-project.org/package=ppcli)
-[![R-CMD-check](https://github.com/piecepackr/ppcli/workflows/R-CMD-check/badge.svg)](https://github.com/piecepackr/ppcli/actions)
+[![R-CMD-check](https://github.com/piecepackr/ppcli/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/piecepackr/ppcli/actions)
 [![codecov](https://codecov.io/github/piecepackr/ppcli/branch/main/graph/badge.svg)](https://app.codecov.io/github/piecepackr/ppcli)
 
 ### Table of Contents

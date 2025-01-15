@@ -2,14 +2,14 @@ Encoding: UTF-8
 Package: ppcli
 Type: Package
 Title: Plaintext Board Game Visualizations
-Version: 0.1.0-4
-Authors@R: c(person("Trevor L", "Davis", role=c("aut", "cre"),
+Version: 0.1.1
+Authors@R: c(person("Trevor L.", "Davis", role=c("aut", "cre"),
              email="trevor.l.davis@gmail.com",
              comment = c(ORCID = "0000-0001-6341-4639")))
 Description: Functions to visualize board games in plaintext.
              Provides colorization support for the terminal and HTML.
 License: MIT + file LICENSE
-URL: https://github.com/piecepackr/ppcli
+URL: https://github.com/piecepackr/ppcli, https://trevorldavis.com/R/ppcli/
 BugReports: https://github.com/piecepackr/ppcli/issues
 LazyLoad: yes
 Depends: R (>= 3.4.0)
@@ -26,5 +26,5 @@ Suggests:
     tibble,
 Remotes: piecepackr/ppdf
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Config/testthat/edition: 3
