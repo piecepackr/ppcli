@@ -158,8 +158,8 @@ get_style_rs <- function(style, big = FALSE) {
                playing_cards_expansion = piecepack_ranks,
                dual_piecepacks_expansion = piecepack_ranks,
                subpack = piecepack_ranks,
-               checkers1 = rep("\u26c2", 6),
-               checkers2 = rep("\u26c2", 6),
+               checkers1 = rep_len("\u26c2", 6L),
+               checkers2 = rep_len("\u26c2", 6L),
                chess1 = c("\u265f", "\u265e", "\u265d", "\u265c", "\u265b", "\u265a"),
                chess2 = c("\u265f", "\u265e", "\u265d", "\u265c", "\u265b", "\u265a"),
                dice = dominoes_ranks[-1],
@@ -171,8 +171,9 @@ get_style_rs <- function(style, big = FALSE) {
                dominoes_red = dominoes_ranks,
                dominoes_white = dominoes_ranks,
                dominoes_yellow = dominoes_ranks,
-               icehouse_pieces = rep(" ", 6),
-               go = rep("\u25cf", 6))
+               icehouse_pieces = rep(" ", 6L),
+               go = rep_len("\u25cf", 6L),
+               marbles = rep_len("\u25cf", 9L))
     rs
 }
 
@@ -204,12 +205,12 @@ get_style_ss <- function(style, big = FALSE) {
                     playing_cards_expansion = french_suits_black,
                     dual_piecepacks_expansion = french_suits_white,
                     subpack = piecepack_suits,
-                    checkers1 = c(rep("\u26c2", 5), "\u26c0"),
-                    checkers2 = c(rep("\u26c2", 5), "\u26c0"),
+                    checkers1 = c(rep_len("\u26c2", 5L), "\u26c0"),
+                    checkers2 = c(rep_len("\u26c2", 5L), "\u26c0"),
                     chess1 = "",
                     chess2 = "",
-                    dice = rep(" ", 6),
-                    dice_fudge =  rep(" ", 6),
+                    dice = rep_len(" ", 6L),
+                    dice_fudge =  rep_len(" ", 6L),
                     dominoes = dominoes_ranks,
                     dominoes_black = dominoes_ranks,
                     dominoes_blue = dominoes_ranks,
@@ -217,8 +218,9 @@ get_style_ss <- function(style, big = FALSE) {
                     dominoes_red = dominoes_ranks,
                     dominoes_white = dominoes_ranks,
                     dominoes_yellow = dominoes_ranks,
-                    go = c(rep("\u25cf", 5), "\u25cb"),
-                    icehouse_pieces = c(rep("\u25b2", 5), "\u25b3"))
+                    go = c(rep_len("\u25cf", 5L), "\u25cb"),
+                    marbles = c(rep_len("\u25cf", 5L), "\u25cb"),
+                    icehouse_pieces = c(rep_len("\u25b2", 5L), "\u25b3"))
     ss
 }
 
@@ -240,15 +242,16 @@ get_style_fg <- function(style) {
                checkers2 = suit_colors,
                dice = suit_colors,
                dice_fudge = suit_colors,
-               dominoes = rep("black", 7L),
-               dominoes_black = rep(dice_colors[2L], 7L),
-               dominoes_blue = rep(dice_colors[4L], 7L),
-               dominoes_green = rep(dice_colors[3L], 7L),
-               dominoes_red = rep(dice_colors[1L], 7L),
-               dominoes_white = rep(dice_colors[6L], 7L),
-               dominoes_yellow = rep(dice_colors[5L], 7L),
+               dominoes = rep_len("black", 7L),
+               dominoes_black = rep_len(dice_colors[2L], 7L),
+               dominoes_blue = rep_len(dice_colors[4L], 7L),
+               dominoes_green = rep_len(dice_colors[3L], 7L),
+               dominoes_red = rep_len(dice_colors[1L], 7L),
+               dominoes_white = rep_len(dice_colors[6L], 7L),
+               dominoes_yellow = rep_len(dice_colors[5L], 7L),
                icehouse_pieces = dice_colors,
-               go = suit_colors)
+               go = suit_colors,
+               marbles = suit_colors)
     fg
 }
 
@@ -256,8 +259,8 @@ color_text <- function(cm, color) {
     if (color == "html") # always colorize if we'll be converting to html
         rlang::local_options(cli.num_colors = 256L)
     if (!isFALSE(color)) {
-        for (rr in seq(nrow(cm$char))) {
-            for (cc in seq(ncol(cm$char))) {
+        for (rr in seq.int(nrow(cm$char))) {
+            for (cc in seq.int(ncol(cm$char))) {
                 fg <- col_cli(cm$fg[rr, cc])
                 colorize <- cli::combine_ansi_styles(fg, cli::bg_br_white)
                 cm$char[rr, cc] <- colorize(cm$char[rr, cc])
@@ -301,12 +304,27 @@ clean_df <- function(df) {
     df$cfg <- ifelse(is.na(df$cfg), "piecepack", df$cfg)
     if (!hasName(df, "rank")) df$rank <- NA_integer_
     df$rank <- ifelse(is.na(df$rank), 1L, df$rank)
+
+    # Adjust board sizes
     # checkers/chess boards rank is number of cells
-    df$rank <- ifelse(df$rank == 1L & str_detect(df$piece_side, "^board") & str_detect(df$cfg, "[12]$"), 8L, df$rank)
+    df$rank <- ifelse(df$rank == 1L & str_detect(df$piece_side, "^board") & str_detect(df$cfg, "[12]$"),
+                      8L,
+                      df$rank)
     # go board rank is number of lines
     df$rank <- ifelse(str_detect(df$piece_side, "^board") & df$cfg == "go",
-                      ifelse(df$rank == 1L, 18, df$rank - 1),
+                      ifelse(df$rank == 1L, 18L, df$rank - 1),
                       df$rank)
+    # marbles board rank is number of holes
+    df$rank <- ifelse(str_detect(df$piece_side, "^board") & df$cfg == "marbles",
+                      ifelse(df$rank == 1L, 4L, df$rank),
+                      df$rank)
+
+    # Checkers pieces, go stones and marbles should be "bit_back"
+    bit_back_cfgs <- c("checkers1", "checkers2", "go", "marbles")
+    df$piece_side <- ifelse(df$piece_side == "bit_face" & df$cfg %in% bit_back_cfgs,
+                            "bit_back",
+                            df$piece_side)
+
     if (!hasName(df, "suit")) df$suit <- NA_integer_
     df$suit <- ifelse(is.na(df$suit), 1L, df$suit)
     if (!hasName(df, "angle")) df$angle <- NA_real_
@@ -377,8 +395,8 @@ add_piece <- function(cm, piece_side, suit, rank, x, y, angle, cfg, reorient = "
            tile_back = add_tile_back(cm, x, y, angle, cfg, style),
            bit_back = add_bit_back(cm, ss, x, y, fg),
            bit_face = add_bit_face(cm, rs, x, y, fg),
-           board_back = add_board(cm, x, y, cell * rank, cell * rank, cell, style),
-           board_face = add_board(cm, x, y, cell * rank, cell * rank, cell, style),
+           board_back = add_board(cm, x, y, cell * rank, cell * rank, cell, cfg, style),
+           board_face = add_board(cm, x, y, cell * rank, cell * rank, cell, cfg, style),
            matchstick_back = add_matchstick_face(cm, x, y, angle, fg, rank),
            matchstick_face = add_matchstick_face(cm, x, y, angle, fg, rank),
            pyramid_top = add_pyramid_top(cm, ss, x, y, angle, fg, rank),
@@ -670,10 +688,23 @@ add_tile_face_piecepack <- function(cm, ss, rs, x, y, angle, fg, style) {
     }
     cm
 }
-add_board <- function(cm, x, y, width = 8, height = 8, cell = 1, style = get_style("Unicode")) {
+
+add_board <- function(cm, x, y, width = 8, height = 8, cell = 1,
+                      cfg = "checkers1", style = get_style("Unicode")) {
     cm$fg[y+-height:height, x+-width:width] <- "black"
     cm <- add_border(cm, x, y, width, height, space = style$space)
-    cm <- add_gridlines(cm, x, y, width, height, cell)
+    cm <- switch(cfg,
+                 marbles = add_holes(cm, x, y, width, height, cell),
+                 add_gridlines(cm, x, y, width, height, cell)
+                 )
+    cm
+}
+
+add_holes <- function(cm, x, y, width = 2, height = 2, cell = 1) {
+    xgs <- x + seq(cell - width,  width - cell,  2 * cell)
+    ygs <- y + seq(cell - height, height - cell, 2 * cell)
+    # cm$char[ygs, xgs] <- "\u25ce"
+    cm$char[ygs, xgs] <- "\u25cc"
     cm
 }
 
