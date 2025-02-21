@@ -532,3 +532,38 @@
                                               
                                               
 
+---
+
+    Code
+      withr::local_seed(42)
+      dfb <- tibble(piece_side = "board_face", suit = 4L, rank = 4L, cfg = "marbles",
+        x = 2, y = 2)
+      dfm <- tibble(piece_side = "bit_face", suit = sample.int(6L, 30L, replace = TRUE),
+      rank = 9L, cfg = "marbles", x = c(0.5 + rep(0:3, 4L), rep(rep(1:3, 3L)), 0.5 +
+        rep(1:2, 2L), 2), y = c(0.5 + rep(0:3, each = 4L), rep(1:3, each = 3L), 0.5 +
+        rep(1:2, each = 2L), 2))
+      df <- rbind(dfb, dfm)
+      cat_piece(dfb)
+    Output
+      ┌───────┐
+      │◌ ◌ ◌ ◌│
+      │       │
+      │◌ ◌ ◌ ◌│
+      │       │
+      │◌ ◌ ◌ ◌│
+      │       │
+      │◌ ◌ ◌ ◌│
+      └───────┘
+    Code
+      cat_piece(df)
+    Output
+      ┌───────┐
+      │○ ● ● ●│
+      │ ● ● ● │
+      │● ● ● ●│
+      │ ● ● ● │
+      │● ● ● ●│
+      │ ● ● ● │
+      │● ● ● ●│
+      └───────┘
+

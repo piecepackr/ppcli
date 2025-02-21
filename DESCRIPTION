@@ -2,7 +2,7 @@ Encoding: UTF-8
 Package: ppcli
 Type: Package
 Title: Plaintext Board Game Visualizations
-Version: 0.1.1
+Version: 0.2.0-1
 Authors@R: c(person("Trevor L.", "Davis", role=c("aut", "cre"),
              email="trevor.l.davis@gmail.com",
              comment = c(ORCID = "0000-0001-6341-4639")))
@@ -24,6 +24,7 @@ Suggests:
     ppdf,
     testthat,
     tibble,
+    withr
 Remotes: piecepackr/ppdf
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1

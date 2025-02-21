@@ -3,6 +3,7 @@ cat_piece <- function(df, ...) ppcli::cat_piece(df, ..., color = FALSE)
 test_that("text diagrams", {
     skip_if_not_installed("dplyr")
     skip_if_not_installed("tibble")
+    skip_if_not_installed("withr")
     library("tibble")
 
     style <- get_style("unicode")
@@ -163,6 +164,24 @@ test_that("text diagrams", {
         dfs <- tibble(piece_side = "bit_back", x = 1:19, y = 1:19,
                       suit = 1:19 %% 6 + 1, cfg = "go")
         df <- dplyr::bind_rows(dfb, dfs)
+        cat_piece(df)
+    })
+
+    # marbles
+    expect_snapshot({
+        withr::local_seed(42)
+        dfb <- tibble(piece_side = "board_face", suit = 4L, rank = 4L,
+                      cfg ="marbles", x = 2, y = 2)
+        dfm <- tibble(
+            piece_side = "bit_face",
+            suit = sample.int(6L, 30L, replace = TRUE),
+            rank = 9L,
+            cfg = "marbles",
+            x = c(0.5 + rep(0:3, 4L), rep(rep(1:3, 3L)), 0.5 + rep(1:2, 2L), 2),
+            y = c(0.5 + rep(0:3, each = 4L), rep(1:3, each = 3L), 0.5 + rep(1:2, each = 2L), 2)
+        )
+        df <- rbind(dfb, dfm)
+        cat_piece(dfb)
         cat_piece(df)
     })
 })
