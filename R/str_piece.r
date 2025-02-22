@@ -172,6 +172,7 @@ get_style_rs <- function(style, big = FALSE) {
                dominoes_white = dominoes_ranks,
                dominoes_yellow = dominoes_ranks,
                icehouse_pieces = rep(" ", 6L),
+               alquerque = rep_len("\u25cf", 6L),
                go = rep_len("\u25cf", 6L),
                marbles = rep_len("\u25cf", 9L))
     rs
@@ -218,6 +219,7 @@ get_style_ss <- function(style, big = FALSE) {
                     dominoes_red = dominoes_ranks,
                     dominoes_white = dominoes_ranks,
                     dominoes_yellow = dominoes_ranks,
+                    alquerque = c(rep_len("\u25cf", 5L), "\u25cb"),
                     go = c(rep_len("\u25cf", 5L), "\u25cb"),
                     marbles = c(rep_len("\u25cf", 5L), "\u25cb"),
                     icehouse_pieces = c(rep_len("\u25b2", 5L), "\u25b3"))
@@ -250,6 +252,7 @@ get_style_fg <- function(style) {
                dominoes_white = rep_len(dice_colors[6L], 7L),
                dominoes_yellow = rep_len(dice_colors[5L], 7L),
                icehouse_pieces = dice_colors,
+               alquerque = suit_colors,
                go = suit_colors,
                marbles = suit_colors)
     fg
@@ -318,9 +321,13 @@ clean_df <- function(df) {
     df$rank <- ifelse(str_detect(df$piece_side, "^board") & df$cfg == "marbles",
                       ifelse(df$rank == 1L, 4L, df$rank),
                       df$rank)
+    # alquerque board always has four "cells"
+    df$rank <- ifelse(str_detect(df$piece_side, "^board") & df$cfg == "alquerque",
+                      4L,
+                      df$rank)
 
     # Checkers pieces, go stones and marbles should be "bit_back"
-    bit_back_cfgs <- c("checkers1", "checkers2", "go", "marbles")
+    bit_back_cfgs <- c("alquerque", "checkers1", "checkers2", "go", "marbles")
     df$piece_side <- ifelse(df$piece_side == "bit_face" & df$cfg %in% bit_back_cfgs,
                             "bit_back",
                             df$piece_side)
@@ -694,9 +701,27 @@ add_board <- function(cm, x, y, width = 8, height = 8, cell = 1,
     cm$fg[y+-height:height, x+-width:width] <- "black"
     cm <- add_border(cm, x, y, width, height, space = style$space)
     cm <- switch(cfg,
+                 alquerque = add_alquerque_board(cm, x, y, width, height, cell),
                  marbles = add_holes(cm, x, y, width, height, cell),
                  add_gridlines(cm, x, y, width, height, cell)
                  )
+    cm
+}
+
+add_alquerque_board <- function(cm, x, y, width = 2, height = 2, cell = 1) {
+    cm <- add_gridlines(cm, x, y, width, height, cell, heavy = FALSE)
+    xur <- x + rep(c(-3, 1), 2L)
+    yur <- y + rep(c(-3, 1), each = 2L)
+    cm$char[xur, yur] <- "\u2571"
+    xur <- x + rep(c(-1, 3), 2L)
+    yur <- y + rep(c(-1, 3), each = 2L)
+    cm$char[xur, yur] <- "\u2571"
+    xul <- x + rep(c(-3, 1), 2L)
+    yul <- y + rep(c(-1, 3), each = 2L)
+    cm$char[xul, yul] <- "\u2572"
+    xul <- x + rep(c(-1, 3), 2L)
+    yul <- y + rep(c(-3, 1), each = 2L)
+    cm$char[xul, yul] <- "\u2572"
     cm
 }
 
@@ -709,26 +734,33 @@ add_holes <- function(cm, x, y, width = 2, height = 2, cell = 1) {
 }
 
 add_gridlines <- function(cm, x, y, width = 2, height = 2, cell = 1,
-                          has_pua_box_drawing = FALSE) {
+                          has_pua_box_drawing = FALSE, heavy = TRUE) {
     # gridlines
     xgs <- x + seq(2 * cell - width, width - 2 * cell, 2 * cell)
     ygs <- y + seq(2 * cell - height, height - 2 * cell, 2 * cell)
     xo <- x + seq(1 - width, width - 1)
     yo <- y + seq(1 - height, height - 1)
 
-    cm$char[ygs, xo] <- "\u2501" # horizontal lines
-    cm$char[yo, xgs] <- "\u2503" # vertical lines
-    cm$char[ygs, xgs] <- "\u254b" # crosses
+    if (heavy) {
+        cm$char[ygs, xo] <- "\u2501" # horizontal lines
+        cm$char[yo, xgs] <- "\u2503" # vertical lines
+        cm$char[ygs, xgs] <- "\u254b" # crosses
+        hv <- ifelse(has_pua_box_drawing, 3L, 2L)
+    } else { # "light"
+        cm$char[ygs, xo] <- "\u2500" # horizontal lines
+        cm$char[yo, xgs] <- "\u2502" # vertical lines
+        cm$char[ygs, xgs] <- "\u253c" # crosses
+        hv <- 1L
+    }
 
     # intersection gridlines and border line
-    hv <- ifelse(has_pua_box_drawing, 3, 2)
     for (xg in xgs) {
-        cm <- add_box_edge(cm, xg, y+height, c(NA, 1, hv, 1)) # top
-        cm <- add_box_edge(cm, xg, y-height, c(hv, 1, NA, 1)) # bottom
+        cm <- add_box_edge(cm, xg, y+height, c(NA, 1L, hv, 1L)) # top
+        cm <- add_box_edge(cm, xg, y-height, c(hv, 1L, NA, 1L)) # bottom
     }
     for (yg in ygs) {
-        cm <- add_box_edge(cm, x+width, yg, c(1, NA, 1, hv)) # right
-        cm <- add_box_edge(cm, x-width, yg, c(1, hv, 1, NA)) # left
+        cm <- add_box_edge(cm, x+width, yg, c(1L, NA, 1L, hv)) # right
+        cm <- add_box_edge(cm, x-width, yg, c(1L, hv, 1L, NA)) # left
     }
     cm
 }

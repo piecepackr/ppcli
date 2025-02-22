@@ -3,11 +3,12 @@ ppcli 0.2.0 (development)
 
 * `cat_piece()` and `str_piece()` adds support for the following game pieces (#4):
 
+  + "alquerque" bit and board pieces.
   + "marbles" bit and board pieces.
 
     - However we currently do not distinguish between the nine marble bit ranks.
 
-* "white" `go` and `chess` bits should now render the same
+* "white" `go` and `checkers` bits should now render the same
   whether `piece_side` is `"bit_back"` or `"bit_face"`.
 
 ppcli 0.1.1

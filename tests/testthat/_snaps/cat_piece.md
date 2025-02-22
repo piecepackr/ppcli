@@ -567,3 +567,38 @@
       │● ● ● ●│
       └───────┘
 
+---
+
+    Code
+      dfb <- tibble(piece_side = "board_face", x = 3, y = 3, suit = 3, cfg = "alquerque")
+      dfs <- tibble(piece_side = "bit_back", x = 1:5, y = 1:5, suit = 1:5, cfg = "alquerque")
+      df <- rbind(dfb, dfs)
+      cat_piece(dfb)
+    Output
+        ┌─┬─┬─┬─┐
+        │╲│╱│╲│╱│
+        ├─┼─┼─┼─┤
+        │╱│╲│╱│╲│
+        ├─┼─┼─┼─┤
+        │╲│╱│╲│╱│
+        ├─┼─┼─┼─┤
+        │╱│╲│╱│╲│
+        └─┴─┴─┴─┘
+                 
+                 
+    Code
+      cat_piece(df)
+    Output
+                  
+        ┌─┬─┬─┬─● 
+        │╲│╱│╲│╱│ 
+        ├─┼─┼─●─┤ 
+        │╱│╲│╱│╲│ 
+        ├─┼─●─┼─┤ 
+        │╲│╱│╲│╱│ 
+        ├─●─┼─┼─┤ 
+        │╱│╲│╱│╲│ 
+        ●─┴─┴─┴─┘ 
+                  
+                  
+
