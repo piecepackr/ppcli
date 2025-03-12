@@ -24,18 +24,24 @@
 #' @param style If "Unicode" (default) only use glyphs in Unicode proper.
 #'              If "Game Bit Duo" use glyphs in Private Use Area of "Game Bit Duo" font.
 #'              If "Game Bit Mono" use glyphs in Private Use Area of "Game Bit Mono" font.
+#' @param xbreaks,ybreaks Subset (of integers) to provide axis labels for if `annotate` is `TRUE`.
+#'                        If `NULL` infer a reasonable choice.
 #' @return Character vector for text diagram.
 #' @seealso [cat_piece()] for printing to the terminal.
 #'          See <https://github.com/trevorld/game-bit-font> for more information about the \dQuote{Game Bit} family of fonts.
 #' @export
 str_piece <- function(df, color = NULL, reorient = "none", annotate = FALSE, ...,
-                      annotation_scale = NULL, style = c("Unicode", "Game Bit Mono", "Game Bit Duo")) {
+                      annotation_scale = NULL,
+                      style = c("Unicode", "Game Bit Mono", "Game Bit Duo"),
+                      xbreaks = NULL, ybreaks = NULL) {
     str_piece_helper(df, ..., color = color, reorient = reorient, annotate = annotate, ...,
-                     annotation_scale = annotation_scale, style = style)
+                     annotation_scale = annotation_scale, style = style,
+                     xbreaks = xbreaks, ybreaks = ybreaks)
 }
 str_piece_helper <- function(df, color = NULL, reorient = "none", annotate = FALSE, ...,
                              xoffset = NULL, yoffset = NULL,
-                             annotation_scale = NULL, style = "Unicode") {
+                             annotation_scale = NULL,
+                             style = "Unicode", xbreaks = NULL, ybreaks = NULL) {
     annotation_scale <- annotation_scale %||% attr(df, "scale_factor") %||% 1
     if (nrow(df) == 0) {
         return(character(0))
@@ -63,7 +69,7 @@ str_piece_helper <- function(df, color = NULL, reorient = "none", annotate = FAL
         cfg <- as.character(df[rr, "cfg"])
         cm <- add_piece(cm, ps, suit, rank, x, y, angle, cfg, reorient, style)
     }
-    cm <- annotate_text(cm, nc, nr, offset$x, offset$y, annotate, annotation_scale)
+    cm <- annotate_text(cm, nc, nr, offset$x, offset$y, annotate, annotation_scale, xbreaks, ybreaks)
     cm <- color_text(cm, color)
     text <- rev(apply(cm$char, 1, function(x) paste(x, collapse = "")))
     text <- paste(text, collapse = "\n")
@@ -280,23 +286,44 @@ col_cli <- function(col = c("black", "blue", "cyan", "green", "magenta", "red", 
     get(paste0("col_", col), envir = getNamespace("cli"))
 }
 
-annotate_text <- function(cm, nc, nr, xoffset, yoffset, annotate, annotation_scale) {
+annotate_text <- function(cm, nc, nr, xoffset, yoffset, annotate, annotation_scale,
+                          xbreaks, ybreaks) {
     if (isFALSE(annotate) || annotate == "none") return(cm)
     step <- 2 * annotation_scale
-    x <- seq(1 + step + 2 * xoffset, nc, by = step)
+
+    if (is.null(xbreaks)) {
+        x <- seq(1 + step + 2 * xoffset, nc, by = step)
+    } else {
+        xbreaks <- as.integer(xbreaks)
+        x <- seq(1 + step + 2 * xoffset, by = step, length.out = max(xbreaks))
+    }
     if (annotate == "cartesian") {
         x <- utils::head(x, 9)
         xt <- as.character(seq_along(x))
-        cm$char[1, x] <- xt
     } else {
         if (length(x) > 26) x <- x[1:26]
-        cm$char[1, x] <- letters[seq_along(x)]
+        xt <- letters[seq_along(x)]
     }
-    y <- seq(1 + step + 2 * yoffset, nr, by= step)
+    if (!is.null(xbreaks)) {
+        x <- x[xbreaks]
+        xt <- xt[xbreaks]
+    }
+    cm$char[1, x] <- xt
+
+    if (is.null(ybreaks)) {
+        y <- seq(1 + step + 2 * yoffset, nr, by= step)
+    } else {
+        ybreaks <- as.integer(ybreaks)
+        y <- seq(1 + step + 2 * yoffset, by= step, length.out = max(ybreaks))
+    }
     yt <- as.character(seq_along(y))
     if (length(yt) > 9) {
         yt <- stringr::str_pad(yt, 2, "right")
         cm$char[y[-seq(9)], 2L] <- substr(yt[-seq(9)], 2, 2)
+    }
+    if (!is.null(ybreaks)) {
+        y <- y[ybreaks]
+        yt <- yt[ybreaks]
     }
     cm$char[y, 1L] <- substr(yt, 1L, 1L)
     cm

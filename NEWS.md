@@ -11,6 +11,9 @@ ppcli 0.2.0 (development)
 * "white" `go` and `checkers` bits should now render the same
   whether `piece_side` is `"bit_back"` or `"bit_face"`.
 
+* `cat_piece()` and `str_piece()` gain arguments `xbreaks` and `ybreaks`
+  to provide a subset (of integers) to provide axis labels for if `annotate` is `TRUE` (#17).
+
 ppcli 0.1.1
 ===========
 

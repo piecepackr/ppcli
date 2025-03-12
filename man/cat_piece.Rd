@@ -12,7 +12,9 @@ cat_piece(
   ...,
   file = "",
   annotation_scale = NULL,
-  style = c("Unicode", "Game Bit Mono", "Game Bit Duo")
+  style = c("Unicode", "Game Bit Mono", "Game Bit Duo"),
+  xbreaks = NULL,
+  ybreaks = NULL
 )
 }
 \arguments{
@@ -47,6 +49,9 @@ By default uses \code{attr(df, "scale_factor") \%||\% 1}.}
 \item{style}{If "Unicode" (default) only use glyphs in Unicode proper.
 If "Game Bit Duo" use glyphs in Private Use Area of "Game Bit Duo" font.
 If "Game Bit Mono" use glyphs in Private Use Area of "Game Bit Mono" font.}
+
+\item{xbreaks, ybreaks}{Subset (of integers) to provide axis labels for if \code{annotate} is \code{TRUE}.
+If \code{NULL} infer a reasonable choice.}
 }
 \value{
 String of text diagram (returned invisibly).

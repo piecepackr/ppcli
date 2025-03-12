@@ -182,7 +182,8 @@ test_that("text diagrams", {
         )
         df <- rbind(dfb, dfm)
         cat_piece(dfb)
-        cat_piece(df)
+        cat_piece(df, xbreaks = 1:7, ybreaks = 1:7,
+                  annotate = TRUE, annotation_scale = 0.5)
     })
 
     # alquerque
