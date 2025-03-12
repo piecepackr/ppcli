@@ -14,10 +14,13 @@
 #' @seealso [str_piece()] for just the character vector.  See <https://github.com/trevorld/game-bit-font> for more information about the \dQuote{Game Bit} family of fonts.
 #' @export
 cat_piece <- function(df, color = NULL, reorient = "none", annotate = FALSE, ...,
-                      file = "", annotation_scale = NULL, style = c("Unicode", "Game Bit Mono", "Game Bit Duo")) {
+                      file = "", annotation_scale = NULL,
+                      style = c("Unicode", "Game Bit Mono", "Game Bit Duo"),
+                      xbreaks = NULL, ybreaks = NULL) {
     color <- color %||% (is.null(file) || file == "")
     s <- str_piece(df, color = color, reorient = reorient, annotate = annotate,
-                   annotation_scale = annotation_scale, style = style)
+                   annotation_scale = annotation_scale, style = style,
+                   xbreaks = xbreaks, ybreaks = ybreaks)
     if (!is.null(file)) cat(s, ..., file = file)
     invisible(s)
 }
