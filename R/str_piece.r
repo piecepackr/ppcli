@@ -521,6 +521,7 @@ add_matchstick_face4 <- function(cm, x, y, angle, fg) {
     cm
 }
 add_matchstick_face5 <- add_matchstick_face4
+
 add_matchstick_face6 <- function(cm, x, y, angle, fg) {
     if (angle %in% c(0, 180)) {
         cm$char[y+-2:2, x] <- "\u2503"
