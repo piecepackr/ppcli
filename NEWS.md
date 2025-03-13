@@ -14,6 +14,9 @@ ppcli 0.2.0 (development)
 * `cat_piece()` and `str_piece()` gain arguments `xbreaks` and `ybreaks`
   to provide a subset (of integers) to provide axis labels for if `annotate` is `TRUE` (#17).
 
+* `cat_piece()` and `str_piece()` now expand the drawing range for longer
+  (piecepack) matchsticks if necessary (#14).
+
 ppcli 0.1.1
 ===========
 

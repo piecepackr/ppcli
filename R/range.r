@@ -37,5 +37,25 @@ range_heuristic <- function(df) {
     ybot <- ifelse(is_board2, df$y-df$rank, ybot)
     ytop <- ifelse(is_board2, df$y+df$rank, ytop)
 
+    # matchsticks
+    m_offset <- pmax(floor(df$rank / 2) - 1, 0) / 2 # 1:6 -> 0, 0, 0, 0.5, 0.5, 1
+    is_matchsticks_horizontal <- grepl("matchstick", df$piece_side) &
+        (df$angle == 90 | df$angle == 270)
+    xleft <- ifelse(is_matchsticks_horizontal, df$x - m_offset, xleft)
+    xright <- ifelse(is_matchsticks_horizontal, df$x + m_offset, xright)
+
+    is_matchsticks_vertical <- grepl("matchstick", df$piece_side) &
+        (df$angle == 0 | df$angle == 180)
+    ybot <- ifelse(is_matchsticks_vertical, df$y - m_offset, ybot)
+    ytop <- ifelse(is_matchsticks_vertical, df$y + m_offset, ytop)
+
+    m_offset_d <- floor(df$rank / 4) # 1:6 -> 0, 0, 0, 1, 1, 1
+    is_matchsticks_diagonal <- grepl("matchstick", df$piece_side) &
+        !is_matchsticks_horizontal & !is_matchsticks_vertical
+    xleft <- ifelse(is_matchsticks_diagonal, df$x - m_offset_d, xleft)
+    xright <- ifelse(is_matchsticks_diagonal, df$x + m_offset_d, xright)
+    ybot <- ifelse(is_matchsticks_diagonal, df$y - m_offset_d, ybot)
+    ytop <- ifelse(is_matchsticks_diagonal, df$y + m_offset_d, ytop)
+
     list(xmin = min(xleft), xmax = max(xright), ymin = min(ybot), ymax = max(ytop))
 }
