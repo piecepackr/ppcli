@@ -63,6 +63,21 @@ outputs them using \code{base::cat()}.  \code{cat_move()} generates
 a plaintext diagram for a move within a game.  \code{cat_game()}
 renders an animation of a game in the terminal.
 }
+\examples{
+dfb <- data.frame(piece_side = "board_face", x= 3, y = 3, suit = 3)
+dfsw <- data.frame(piece_side = "bit_back",
+                   x = c(1:5, 1:5, 4:5),
+                   y = rep.int(1:3, c(5L, 5L, 2L)),
+                   suit = 6L)
+dfsb <- data.frame(piece_side = "bit_back",
+                   x = c(1:5, 1:5, 1:2),
+                   y = rep.int(5:3, c(5L, 5L, 2L)),
+                   suit = 2L)
+df <- rbind(dfb, dfsw, dfsb)
+df$cfg <- "alquerque"
+cat_piece(df)
+cat_piece(df, annotate = TRUE)
+}
 \seealso{
 \code{\link[=str_piece]{str_piece()}} for just the character vector.  See \url{https://github.com/trevorld/game-bit-font} for more information about the \dQuote{Game Bit} family of fonts.
 }
