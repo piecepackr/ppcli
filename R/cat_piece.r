@@ -12,6 +12,20 @@
 #' @return String of text diagram (returned invisibly).
 #'         As a side effect prints out the text diagram using [cat()].
 #' @seealso [str_piece()] for just the character vector.  See <https://github.com/trevorld/game-bit-font> for more information about the \dQuote{Game Bit} family of fonts.
+#' @examples
+#' dfb <- data.frame(piece_side = "board_face", x= 3, y = 3, suit = 3)
+#' dfsw <- data.frame(piece_side = "bit_back",
+#'                    x = c(1:5, 1:5, 4:5),
+#'                    y = rep.int(1:3, c(5L, 5L, 2L)),
+#'                    suit = 6L)
+#' dfsb <- data.frame(piece_side = "bit_back",
+#'                    x = c(1:5, 1:5, 1:2),
+#'                    y = rep.int(5:3, c(5L, 5L, 2L)),
+#'                    suit = 2L)
+#' df <- rbind(dfb, dfsw, dfsb)
+#' df$cfg <- "alquerque"
+#' cat_piece(df)
+#' cat_piece(df, annotate = TRUE)
 #' @export
 cat_piece <- function(df, color = NULL, reorient = "none", annotate = FALSE, ...,
                       file = "", annotation_scale = NULL,
