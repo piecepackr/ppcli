@@ -3,14 +3,17 @@
     Code
       dft <- tibble(piece_side = "board_back", x = seq(1.5, 5.5, 2), y = 1.5, rank = 2,
       cfg = "checkers1")
-      dfb <- tibble(piece_side = "bit_back", x = 1:6, y = 1, suit = 1:6, cfg = "checkers1")
-      dfd <- tibble(piece_side = "die_face", x = 1:6, y = 2, suit = 1:6, rank = 1:6,
+      dfbb <- tibble(piece_side = "bit_back", x = 1:6, y = 1, suit = 1:6, cfg = "checkers1")
+      dfbf <- tibble(piece_side = "bit_face", x = 1:6, y = 2, suit = 1:6, cfg = "checkers1")
+      dfd <- tibble(piece_side = "die_face", x = 1:6, y = 3, suit = 1:6, rank = 1:6,
       cfg = "dice", angle = c(45, rep(0, 5)))
-      df <- dplyr::bind_rows(dft, dfb, dfd)
+      df <- dplyr::bind_rows(dft, dfbb, dfbf, dfd)
       cat_piece(df)
     Output
+                    
+        ·⃟ ⠌⃞ ⋰⃞ ∷⃞ ⁙⃞ ⠿⃞ 
        ┌─┰─┬─┰─┬─┰─┐
-       │·⃟┃⠌⃞│⋰⃞┃∷⃞│⁙⃞┃⠿⃞│
+       │⛃┃⛃│⛃┃⛃│⛃┃⛁│
        ┝━╋━┿━╋━┿━╋━┥
        │⛂┃⛂│⛂┃⛂│⛂┃⛀│
        └─┸─┴─┸─┴─┸─┘
@@ -20,9 +23,12 @@
       y = 2 * y)
       cat_piece(df, annotate = TRUE, annotation_scale = 2, reorient = "all")
     Output
+                                 
+      3   ·⃞   ⠌⃞   ⋰⃞   ∷⃞   ⁙⃞   ⠿⃞  
+                                 
         ┌───┰───┬───┰───┬───┰───┐
         │   ┃   │   ┃   │   ┃   │
-      2 │ ·⃞ ┃ ⠌⃞ │ ⋰⃞ ┃ ∷⃞ │ ⁙⃞ ┃ ⠿⃞ │
+      2 │ ⛃ ┃ ⛃ │ ⛃ ┃ ⛃ │ ⛃ ┃ ⛁ │
         │   ┃   │   ┃   │   ┃   │
         ┝━━━╋━━━┿━━━╋━━━┿━━━╋━━━┥
         │   ┃   │   ┃   │   ┃   │
@@ -112,7 +118,7 @@
       dfpb <- tibble(piece_side = "pawn_back", x = 1:2, y = 1, suit = 2:1, angle = c(
         0, 45))
       dfpf <- tibble(piece_side = "pawn_face", x = 1, y = 2, suit = 1, angle = 45)
-      dfbf <- tibble(piece_side = "bit_face", x = 3, y = 1, suit = 3, cfg = "checkers1")
+      dfbf <- tibble(piece_side = "bit_back", x = 3, y = 1, suit = 3, cfg = "checkers1")
       df <- dplyr::bind_rows(dft, dfpb, dfpf, dfbf)
       cat_piece(df)
     Output

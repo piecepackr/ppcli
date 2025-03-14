@@ -17,8 +17,11 @@ New features
 Bug fixes and minor improvements
 --------------------------------
 
-* "white" `go` and `checkers` bits should now render the same
+* "white" `go` and `marbles` bits should now render the same
   whether `piece_side` is `"bit_back"` or `"bit_face"`.
+
+* `checkers1` and `checkers2` bit faces should now render
+  as checker "kings".  Bit backs should continue to render as checker "men".
 
 * `cat_piece()` and `str_piece()` now expand the drawing range for longer
   (piecepack) matchsticks if necessary (#14).

@@ -180,8 +180,8 @@ get_style_rs <- function(style, big = FALSE) {
                playing_cards_expansion = piecepack_ranks,
                dual_piecepacks_expansion = piecepack_ranks,
                subpack = piecepack_ranks,
-               checkers1 = rep_len("\u26c2", 6L),
-               checkers2 = rep_len("\u26c2", 6L),
+               checkers1 = c(rep_len("\u26c3", 5L), "\u26c1"),
+               checkers2 = c(rep_len("\u26c3", 5L), "\u26c1"),
                chess1 = c("\u265f", "\u265e", "\u265d", "\u265c", "\u265b", "\u265a"),
                chess2 = c("\u265f", "\u265e", "\u265d", "\u265c", "\u265b", "\u265a"),
                dice = dominoes_ranks[-1],
@@ -369,8 +369,8 @@ clean_df <- function(df) {
                       4L,
                       df$rank)
 
-    # Checkers pieces, go stones and marbles should be "bit_back"
-    bit_back_cfgs <- c("alquerque", "checkers1", "checkers2", "go", "marbles")
+    # Go stones and marbles should be "bit_back"
+    bit_back_cfgs <- c("alquerque", "go", "marbles")
     df$piece_side <- ifelse(df$piece_side == "bit_face" & df$cfg %in% bit_back_cfgs,
                             "bit_back",
                             df$piece_side)
@@ -428,6 +428,7 @@ add_piece <- function(cm, piece_side, suit, rank, x, y, angle, cfg, reorient = "
         else
             rs <- style$rs[[cfg]][rank]
         if (grepl("chess", cfg) && suit == 6L) rs <- unicode_chess_white[rank]
+        if (grepl("checkers", cfg) && suit == 6L) rs <- "\u26c1"
         if (!grepl("matchstick", piece_side)) rs <- style$rotate(rs, angle, reorient)
     }
     if (grepl("2", cfg)) {
