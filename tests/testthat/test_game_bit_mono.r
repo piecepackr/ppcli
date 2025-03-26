@@ -19,6 +19,6 @@ test_that("Dominoes", {
 
 # https://github.com/piecepackr/ppcli/issues/3
 test_that("Can't rotate boards", {
-    skip_if_not_installed("ppdf")
-    expect_snapshot(cat_piece(ppdf::checkers_italian_checkers(), annotate = "cartesian"))
+    skip_if_not_installed("ppdf", "0.2.0-13")
+    expect_snapshot(cat_piece(ppdf::checker_italian_checkers(), annotate = "cartesian"))
 })

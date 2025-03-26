@@ -196,7 +196,8 @@ get_style_rs <- function(style, big = FALSE) {
                icehouse_pieces = rep(" ", 6L),
                alquerque = rep_len("\u25cf", 6L),
                go = rep_len("\u25cf", 6L),
-               marbles = rep_len("\u25cf", 9L))
+               marbles = rep_len("\u25cf", 9L),
+               morris = rep_len("\u25cf", 9L))
     rs
 }
 
@@ -244,6 +245,7 @@ get_style_ss <- function(style, big = FALSE) {
                     alquerque = c(rep_len("\u25cf", 5L), "\u25cb"),
                     go = c(rep_len("\u25cf", 5L), "\u25cb"),
                     marbles = c(rep_len("\u25cf", 5L), "\u25cb"),
+                    morris = c(rep_len("\u25cf", 5L), "\u25cb"),
                     icehouse_pieces = c(rep_len("\u25b2", 5L), "\u25b3"))
     ss
 }
@@ -276,7 +278,8 @@ get_style_fg <- function(style) {
                icehouse_pieces = dice_colors,
                alquerque = suit_colors,
                go = suit_colors,
-               marbles = suit_colors)
+               marbles = suit_colors,
+               morris = suit_colors)
     fg
 }
 
@@ -368,9 +371,13 @@ clean_df <- function(df) {
     df$rank <- ifelse(str_detect(df$piece_side, "^board") & df$cfg == "alquerque",
                       4L,
                       df$rank)
+    # morris rank is number of men
+    df$rank <- ifelse(str_detect(df$piece_side, "^board") & df$cfg == "morris",
+                      ifelse(df$rank == 1L, 9L, df$rank),
+                      df$rank)
 
     # Go stones and marbles should be "bit_back"
-    bit_back_cfgs <- c("alquerque", "go", "marbles")
+    bit_back_cfgs <- c("alquerque", "go", "marbles", "morris")
     df$piece_side <- ifelse(df$piece_side == "bit_face" & df$cfg %in% bit_back_cfgs,
                             "bit_back",
                             df$piece_side)
@@ -436,6 +443,14 @@ add_piece <- function(cm, piece_side, suit, rank, x, y, angle, cfg, reorient = "
     } else {
         cell <- 1
     }
+    if (cfg == "morris") {
+        morris_widths <- c(6, 2, 2, 2, 4, 4, 4, 6, 6, 6, 6, 6)
+        board_width <- morris_widths[rank]
+        board_height <- morris_widths[rank]
+    } else {
+        board_width <- cell * rank
+        board_height <- cell * rank
+    }
     switch(piece_side,
            coin_back = add_coin_back(cm, ss, x, y, angle, fg, style),
            coin_face = add_coin_face(cm, rs, x, y, angle, fg, style),
@@ -446,8 +461,8 @@ add_piece <- function(cm, piece_side, suit, rank, x, y, angle, cfg, reorient = "
            tile_back = add_tile_back(cm, x, y, angle, cfg, style),
            bit_back = add_bit_back(cm, ss, x, y, fg),
            bit_face = add_bit_face(cm, rs, x, y, fg),
-           board_back = add_board(cm, x, y, cell * rank, cell * rank, cell, cfg, style),
-           board_face = add_board(cm, x, y, cell * rank, cell * rank, cell, cfg, style),
+           board_back = add_board(cm, x, y, board_width, board_height, cell, cfg, style, rank),
+           board_face = add_board(cm, x, y, board_height, board_height, cell, cfg, style, rank),
            matchstick_back = add_matchstick_face(cm, x, y, angle, fg, rank),
            matchstick_face = add_matchstick_face(cm, x, y, angle, fg, rank),
            pyramid_top = add_pyramid_top(cm, ss, x, y, angle, fg, rank),
@@ -742,30 +757,99 @@ add_tile_face_piecepack <- function(cm, ss, rs, x, y, angle, fg, style) {
 }
 
 add_board <- function(cm, x, y, width = 8, height = 8, cell = 1,
-                      cfg = "checkers1", style = get_style("Unicode")) {
+                      cfg = "checkers1",
+                      style = get_style("Unicode"),
+                      rank = 8L) {
     cm$fg[y+-height:height, x+-width:width] <- "black"
-    cm <- add_border(cm, x, y, width, height, space = style$space)
+    if (cfg != "morris")
+        cm <- add_border(cm, x, y, width, height, space = style$space)
     cm <- switch(cfg,
                  alquerque = add_alquerque_board(cm, x, y, width, height, cell),
                  marbles = add_holes(cm, x, y, width, height, cell),
+                 morris = add_morris_board(cm, x, y, width, height, cell, style, rank),
                  add_gridlines(cm, x, y, width, height, cell)
                  )
     cm
 }
 
-add_alquerque_board <- function(cm, x, y, width = 2, height = 2, cell = 1) {
+add_morris_board <- function(cm, x, y, width = 2, height = 2, cell = 1,
+                             style = get_style("Unicode"), rank = 9L) {
+    hv <- 1L # light
+    if (rank == 2L) { # three men's morris without diagonals
+        cm <- add_border(cm, x, y, width, height, space = style$space)
+        cm <- add_gridlines(cm, x, y, width, height, cell = 1, heavy = FALSE)
+    } else if (rank < 5L) { # three men's morris
+        cm <- add_border(cm, x, y, width, height, space = style$space)
+        cm <- add_alquerque_board(cm, x, y, width, height, cell)
+    } else if (rank < 7L) { # six men's morris
+        cm <- add_border(cm, x, y, width, height, space = style$space)
+        cm <- add_border(cm, x, y, 2L, 2L, space = style$space)
+        cm$char[y, x + c(-3, 3)] <- "\u2500" # light horizontal line
+        cm$char[y + c(-3, 3), x] <- "\u2502" # light vertical line
+        # intersection gridlines and border line
+        cm <- add_box_edge(cm, x-width, y, c(1L, hv, 1L, NA)) # left
+        cm <- add_box_edge(cm, x+2, y, c(1L, hv, 1L, NA)) # left
+        cm <- add_box_edge(cm, x+width, y, c(1L, NA, 1L, hv)) # right
+        cm <- add_box_edge(cm, x-2, y, c(1L, NA, 1L, hv)) # right
+        cm <- add_box_edge(cm, x, y+height, c(NA, 1L, hv, 1L)) # top
+        cm <- add_box_edge(cm, x, y-2, c(NA, 1L, hv, 1L)) # top
+        cm <- add_box_edge(cm, x, y-height, c(hv, 1L, NA, 1L)) # bottom
+        cm <- add_box_edge(cm, x, y+2, c(hv, 1L, NA, 1L)) # bottom
+    } else if (rank == 7L) { # seven men's morris
+        cm <- add_border(cm, x, y, width, height, space = style$space)
+        cm <- add_border(cm, x, y, 2L, 2L, space = style$space)
+        cm <- add_gridlines(cm, x, y, width, height, cell = 2, heavy = FALSE)
+        cm$char[y, x + c(-2L, 2L)] <- "\u253c" # light crosses
+        cm$char[y + c(-2L, 2L), x] <- "\u253c" # light crosses
+    } else { # 9 men's morris
+        cm <- add_border(cm, x, y, width, height, space = style$space)
+        cm <- add_border(cm, x, y, 4L, 4L, space = style$space)
+        cm <- add_border(cm, x, y, 2L, 2L, space = style$space)
+        cm$char[y, x + c(-5, -3, 3, 5)] <- "\u2500" # light horizontal line
+        cm$char[y + c(-5, -3, 3, 5), x] <- "\u2502" # light vertical line
+        cm$char[y, x + c(-4L, 4L)] <- "\u253c" # light crosses
+        cm$char[y + c(-4L, 4L), x] <- "\u253c" # light crosses
+        cm <- add_box_edge(cm, x-width, y, c(1L, hv, 1L, NA)) # left
+        cm <- add_box_edge(cm, x+2, y, c(1L, hv, 1L, NA)) # left
+        cm <- add_box_edge(cm, x+width, y, c(1L, NA, 1L, hv)) # right
+        cm <- add_box_edge(cm, x-2, y, c(1L, NA, 1L, hv)) # right
+        cm <- add_box_edge(cm, x, y+height, c(NA, 1L, hv, 1L)) # top
+        cm <- add_box_edge(cm, x, y-2, c(NA, 1L, hv, 1L)) # top
+        cm <- add_box_edge(cm, x, y-height, c(hv, 1L, NA, 1L)) # bottom
+        cm <- add_box_edge(cm, x, y+2, c(hv, 1L, NA, 1L)) # bottom
+        if (rank > 10L) { # 12 men's morris
+            cm$char[x - 5, y - 5] <- "\u2571" # up to right diagonal
+            cm$char[x - 3, y - 3] <- "\u2571" # up to right diagonal
+            cm$char[x + 3, y + 3] <- "\u2571" # up to right diagonal
+            cm$char[x + 5, y + 5] <- "\u2571" # up to right diagonal
+            cm$char[x + 5, y - 5] <- "\u2572" # up to left diagonal
+            cm$char[x + 3, y - 3] <- "\u2572" # up to left diagonal
+            cm$char[x - 3, y + 3] <- "\u2572" # up to left diagonal
+            cm$char[x - 5, y + 5] <- "\u2572" # up to left diagonal
+
+        }
+    }
+    cm
+}
+
+add_alquerque_board <- function(cm, x, y, width = 4, height = 4, cell = 1) {
+    stopifnot(width %% 2 == 0, height %% 2 == 0)
     cm <- add_gridlines(cm, x, y, width, height, cell, heavy = FALSE)
-    xur <- x + rep(c(-3, 1), 2L)
-    yur <- y + rep(c(-3, 1), each = 2L)
+    xl <- x - width
+    xr <- x + width
+    yb <- y - height
+    yt <- y + height
+    xur <- rep(seq.int(xl + 1L, xr - 1L, by = 4L), height / 2)
+    yur <- rep(seq.int(yb + 1L, yt - 1L, by = 4L), each = 2L)
     cm$char[xur, yur] <- "\u2571"
-    xur <- x + rep(c(-1, 3), 2L)
-    yur <- y + rep(c(-1, 3), each = 2L)
+    xur <- rep(seq.int(xl + 3L, xr - 1L, by = 4L), height / 2)
+    yur <- rep(seq.int(yb + 3L, yt - 1L, by = 4L), each = 2L)
     cm$char[xur, yur] <- "\u2571"
-    xul <- x + rep(c(-3, 1), 2L)
-    yul <- y + rep(c(-1, 3), each = 2L)
+    xul <- rep(seq.int(xl + 1L, xr - 1L, by = 4L), height / 2)
+    yul <- rep(seq.int(yb + 3L, yt - 1L, by = 4L), each = 2L)
     cm$char[xul, yul] <- "\u2572"
-    xul <- x + rep(c(-1, 3), 2L)
-    yul <- y + rep(c(-3, 1), each = 2L)
+    xul <- rep(seq.int(xl + 3L, xr - 1L, by = 4L), height / 2)
+    yul <- rep(seq.int(yb + 1L, yt - 1L, by = 4L), each = 2L)
     cm$char[xul, yul] <- "\u2572"
     cm
 }
