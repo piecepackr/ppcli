@@ -31,6 +31,8 @@ Bug fixes and minor improvements
 * `str_piece()`'s `color` argument if `NULL` now falls back to `FALSE`
   (instead of throwing an error).
 
+* Should now be able to correctly rotate chess knights 315 degrees.
+
 ppcli 0.1.1
 ===========
 
