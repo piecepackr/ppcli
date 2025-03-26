@@ -11,6 +11,8 @@ New features
 
     - However we currently do not distinguish between the nine marble bit ranks.
 
+  + "morris" bit and board pieces.
+
 * `cat_piece()` and `str_piece()` gain arguments `xbreaks` and `ybreaks`
   to provide a subset (of integers) to provide axis labels for if `annotate` is `TRUE` (#17).
 

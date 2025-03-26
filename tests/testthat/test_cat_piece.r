@@ -195,4 +195,35 @@ test_that("text diagrams", {
         cat_piece(dfb)
         cat_piece(df)
     })
+
+    # morris
+    expect_snapshot({
+        df2 <- tibble(piece_side = "board_face", x = 2, y = 2,
+                      rank = 2L, suit = 3L, cfg = "morris")
+        cat_piece(df2)
+
+        df3 <- tibble(piece_side = "board_face", x = 2, y = 2,
+                      rank = 3L, suit = 3L, cfg = "morris")
+        dfs <- tibble(piece_side = "bit_back", x = rep(1:3, 2), y = rep(1:2, each = 3),
+                      rank = 1L, suit = 1:6, cfg = "morris")
+        df <- rbind(df3, dfs)
+        cat_piece(df3)
+        cat_piece(df)
+
+        df6 <- tibble(piece_side = "board_face", x = 3, y = 3,
+                      rank = 6L, suit = 3L, cfg = "morris")
+        cat_piece(df6)
+
+        df7 <- tibble(piece_side = "board_face", x = 3, y = 3,
+                      rank = 7L, suit = 3L, cfg = "morris")
+        cat_piece(df7)
+
+        df9 <- tibble(piece_side = "board_face", x = 4, y = 4,
+                      rank = 9L, suit = 3L, cfg = "morris")
+        cat_piece(df9)
+
+        df12 <- tibble(piece_side = "board_face", x = 4, y = 4,
+                       rank = 12L, suit = 3L, cfg = "morris")
+        cat_piece(df12)
+    })
 })

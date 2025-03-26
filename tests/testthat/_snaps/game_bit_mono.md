@@ -22,7 +22,7 @@
 # Can't rotate boards
 
     Code
-      cat_piece(ppdf::checkers_italian_checkers(), annotate = "cartesian")
+      cat_piece(ppdf::checker_italian_checkers(), annotate = "cartesian")
     Output
        ┌─┰─┰─┰─┰─┰─┰─┰─┐
       8│⛂┃ ┃⛂┃ ┃⛂┃ ┃⛂┃ │
