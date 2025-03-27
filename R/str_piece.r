@@ -197,7 +197,8 @@ get_style_rs <- function(style, big = FALSE) {
                alquerque = rep_len("\u25cf", 6L),
                go = rep_len("\u25cf", 6L),
                marbles = rep_len("\u25cf", 9L),
-               morris = rep_len("\u25cf", 9L))
+               morris = rep_len("\u25cf", 9L),
+               reversi = c(rep_len("\u26c3", 5L), "\u26c1"))
     rs
 }
 
@@ -226,27 +227,28 @@ get_style_ss <- function(style, big = FALSE) {
     }
 
     ss <- list(piecepack = piecepack_suits,
-                    playing_cards_expansion = french_suits_black,
-                    dual_piecepacks_expansion = french_suits_white,
-                    subpack = piecepack_suits,
-                    checkers1 = c(rep_len("\u26c2", 5L), "\u26c0"),
-                    checkers2 = c(rep_len("\u26c2", 5L), "\u26c0"),
-                    chess1 = "",
-                    chess2 = "",
-                    dice = rep_len(" ", 6L),
-                    dice_fudge =  rep_len(" ", 6L),
-                    dominoes = dominoes_ranks,
-                    dominoes_black = dominoes_ranks,
-                    dominoes_blue = dominoes_ranks,
-                    dominoes_green = dominoes_ranks,
-                    dominoes_red = dominoes_ranks,
-                    dominoes_white = dominoes_ranks,
-                    dominoes_yellow = dominoes_ranks,
-                    alquerque = c(rep_len("\u25cf", 5L), "\u25cb"),
-                    go = c(rep_len("\u25cf", 5L), "\u25cb"),
-                    marbles = c(rep_len("\u25cf", 5L), "\u25cb"),
-                    morris = c(rep_len("\u25cf", 5L), "\u25cb"),
-                    icehouse_pieces = c(rep_len("\u25b2", 5L), "\u25b3"))
+               playing_cards_expansion = french_suits_black,
+               dual_piecepacks_expansion = french_suits_white,
+               subpack = piecepack_suits,
+               checkers1 = c(rep_len("\u26c2", 5L), "\u26c0"),
+               checkers2 = c(rep_len("\u26c2", 5L), "\u26c0"),
+               chess1 = "",
+               chess2 = "",
+               dice = rep_len(" ", 6L),
+               dice_fudge =  rep_len(" ", 6L),
+               dominoes = dominoes_ranks,
+               dominoes_black = dominoes_ranks,
+               dominoes_blue = dominoes_ranks,
+               dominoes_green = dominoes_ranks,
+               dominoes_red = dominoes_ranks,
+               dominoes_white = dominoes_ranks,
+               dominoes_yellow = dominoes_ranks,
+               icehouse_pieces = c(rep_len("\u25b2", 5L), "\u25b3"),
+               alquerque = c(rep_len("\u25cf", 5L), "\u25cb"),
+               go = c(rep_len("\u25cf", 5L), "\u25cb"),
+               marbles = c(rep_len("\u25cf", 5L), "\u25cb"),
+               morris = c(rep_len("\u25cf", 5L), "\u25cb"),
+               reversi = c("\u26c3", "\u26c1", rep_len("\u26c3", 4L)))
     ss
 }
 
@@ -279,7 +281,8 @@ get_style_fg <- function(style) {
                alquerque = suit_colors,
                go = suit_colors,
                marbles = suit_colors,
-               morris = suit_colors)
+               morris = suit_colors,
+               reversi = suit_colors)
     fg
 }
 
@@ -353,6 +356,10 @@ clean_df <- function(df) {
     df$cfg <- ifelse(is.na(df$cfg), "piecepack", df$cfg)
     if (!hasName(df, "rank")) df$rank <- NA_integer_
     df$rank <- ifelse(is.na(df$rank), 1L, df$rank)
+    if (!hasName(df, "suit")) df$suit <- NA_integer_
+    df$suit <- ifelse(is.na(df$suit), 1L, df$suit)
+    if (!hasName(df, "angle")) df$angle <- NA_real_
+    df$angle <- ifelse(is.na(df$angle), 0, df$angle %% 360)
 
     # Adjust board sizes
     # checkers/chess boards rank is number of cells
@@ -381,11 +388,11 @@ clean_df <- function(df) {
     df$piece_side <- ifelse(df$piece_side == "bit_face" & df$cfg %in% bit_back_cfgs,
                             "bit_back",
                             df$piece_side)
+    # reversi
+    reversi_flip <- df$cfg == "reversi" & df$piece_side == "bit_back"
+    df$piece_side <- ifelse(reversi_flip, "bit_face", df$piece_side)
+    df$suit <- ifelse(reversi_flip, c(3L, 6L, 1L, 5L, 4L, 2L)[df$suit], df$suit)
 
-    if (!hasName(df, "suit")) df$suit <- NA_integer_
-    df$suit <- ifelse(is.na(df$suit), 1L, df$suit)
-    if (!hasName(df, "angle")) df$angle <- NA_real_
-    df$angle <- ifelse(is.na(df$angle), 0, df$angle %% 360)
     attr(df, "was_cleaned") <- TRUE
     df
 }
@@ -435,6 +442,7 @@ add_piece <- function(cm, piece_side, suit, rank, x, y, angle, cfg, reorient = "
         else
             rs <- style$rs[[cfg]][rank]
         if (grepl("chess", cfg) && suit == 6L) rs <- unicode_chess_white[rank]
+        if (grepl("reversi", cfg) && suit == 6L) rs <- "\u26c1"
         if (grepl("checkers", cfg) && suit == 6L) rs <- "\u26c1"
         if (!grepl("matchstick", piece_side)) rs <- style$rotate(rs, angle, reorient)
     }
