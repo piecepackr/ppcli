@@ -754,3 +754,15 @@
        └─┸─┸─┸─┸─┸─┸─┸─┘
                         
 
+---
+
+    Code
+      df <- tibble(piece_side = "die_face", x = 1:6, y = 1, rank = 1:6, suit = 1:6,
+      cfg = "dice_numeral")
+      cat_piece(df)
+    Output
+                    
+        1⃞ 2⃞ 3⃞ 4⃞ 5⃞ 6⃞ 
+                    
+                    
+

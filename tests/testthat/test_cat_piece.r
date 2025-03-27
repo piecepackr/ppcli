@@ -238,4 +238,10 @@ test_that("text diagrams", {
         df <- rbind(dfx, dff, dfb)
         cat_piece(df)
     })
+
+    # numeral dice
+    expect_snapshot({
+        df <- tibble(piece_side = "die_face", x=1:6, y=1, rank=1:6, suit=1:6, cfg="dice_numeral")
+        cat_piece(df)
+    })
 })

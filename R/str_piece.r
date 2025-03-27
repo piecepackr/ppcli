@@ -147,7 +147,8 @@ get_style_combining <- function(style) {
                 dual_piecepacks_expansion = french_suits_white,
                 subpack = piecepack_suits,
                 dice = die_suits,
-                dice_fudge = die_suits)
+                dice_fudge = die_suits,
+                dice_numeral = die_suits)
 
     list(coin = coin, die = die, pawn = pawn)
 }
@@ -186,6 +187,7 @@ get_style_rs <- function(style, big = FALSE) {
                chess2 = c("\u265f", "\u265e", "\u265d", "\u265c", "\u265b", "\u265a"),
                dice = dominoes_ranks[-1],
                dice_fudge = dice_fudge,
+               dice_numeral = as.character(1:6),
                dominoes = dominoes_ranks,
                dominoes_black = dominoes_ranks,
                dominoes_blue = dominoes_ranks,
@@ -236,6 +238,7 @@ get_style_ss <- function(style, big = FALSE) {
                chess2 = "",
                dice = rep_len(" ", 6L),
                dice_fudge =  rep_len(" ", 6L),
+               dice_numeral =  rep_len(" ", 6L),
                dominoes = dominoes_ranks,
                dominoes_black = dominoes_ranks,
                dominoes_blue = dominoes_ranks,
@@ -268,8 +271,9 @@ get_style_fg <- function(style) {
                chess2 = suit_colors,
                checkers1 = suit_colors,
                checkers2 = suit_colors,
-               dice = suit_colors,
-               dice_fudge = suit_colors,
+               dice = dice_colors,
+               dice_fudge = dice_colors,
+               dice_numeral = dice_colors,
                dominoes = rep_len("black", 7L),
                dominoes_black = rep_len(dice_colors[2L], 7L),
                dominoes_blue = rep_len(dice_colors[4L], 7L),
