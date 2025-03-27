@@ -723,3 +723,34 @@
                      
                      
 
+---
+
+    Code
+      dfx <- tibble(piece_side = "board_face", x = 4.5, y = 4.5, rank = 8L, suit = 2L,
+        cfg = "reversi")
+      dff <- tibble(piece_side = "bit_face", x = 1:6, y = 1, rank = 1L, suit = 1:6,
+      cfg = "reversi")
+      dfb <- tibble(piece_side = "bit_back", x = 1:6, y = 2, rank = 1L, suit = 1:6,
+      cfg = "reversi")
+      df <- rbind(dfx, dff, dfb)
+      cat_piece(df)
+    Output
+       ┌─┰─┰─┰─┰─┰─┰─┰─┐
+       │ ┃ ┃ ┃ ┃ ┃ ┃ ┃ │
+       ┝━╋━╋━╋━╋━╋━╋━╋━┥
+       │ ┃ ┃ ┃ ┃ ┃ ┃ ┃ │
+       ┝━╋━╋━╋━╋━╋━╋━╋━┥
+       │ ┃ ┃ ┃ ┃ ┃ ┃ ┃ │
+       ┝━╋━╋━╋━╋━╋━╋━╋━┥
+       │ ┃ ┃ ┃ ┃ ┃ ┃ ┃ │
+       ┝━╋━╋━╋━╋━╋━╋━╋━┥
+       │ ┃ ┃ ┃ ┃ ┃ ┃ ┃ │
+       ┝━╋━╋━╋━╋━╋━╋━╋━┥
+       │ ┃ ┃ ┃ ┃ ┃ ┃ ┃ │
+       ┝━╋━╋━╋━╋━╋━╋━╋━┥
+       │⛃┃⛁┃⛃┃⛃┃⛃┃⛃┃ ┃ │
+       ┝━╋━╋━╋━╋━╋━╋━╋━┥
+       │⛃┃⛃┃⛃┃⛃┃⛃┃⛁┃ ┃ │
+       └─┸─┸─┸─┸─┸─┸─┸─┘
+                        
+
