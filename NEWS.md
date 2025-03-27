@@ -7,6 +7,7 @@ New features
 * `cat_piece()` and `str_piece()` adds support for the following game pieces (#4):
 
   + "alquerque" bit and board pieces.
+  + "dice_numeral" dice.
   + "marbles" bit and board pieces.
 
     - However we currently do not distinguish between the nine marble bit ranks.
