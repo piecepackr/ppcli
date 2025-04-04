@@ -17,6 +17,7 @@ New features
 
 * `cat_piece()` and `str_piece()` gain arguments `xbreaks` and `ybreaks`
   to provide a subset (of integers) to provide axis labels for if `annotate` is `TRUE` (#17).
+* `cat_piece()` and `str_piece()` now supports the "cyan" and "magenta" colors (#5).
 
 Bug fixes and minor improvements
 --------------------------------

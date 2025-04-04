@@ -232,13 +232,13 @@ get_style_ss <- function(style, big = FALSE) {
                playing_cards_expansion = french_suits_black,
                dual_piecepacks_expansion = french_suits_white,
                subpack = piecepack_suits,
-               checkers1 = c(rep_len("\u26c2", 5L), "\u26c0"),
-               checkers2 = c(rep_len("\u26c2", 5L), "\u26c0"),
+               checkers1 = c(rep_len("\u26c2", 5L), "\u26c0", rep_len("\u26c2", 2L)),
+               checkers2 = c(rep_len("\u26c2", 5L), "\u26c0", rep_len("\u26c2", 2L)),
                chess1 = "",
                chess2 = "",
-               dice = rep_len(" ", 6L),
-               dice_fudge =  rep_len(" ", 6L),
-               dice_numeral =  rep_len(" ", 6L),
+               dice = rep_len(" ", 8L),
+               dice_fudge =  rep_len(" ", 8L),
+               dice_numeral =  rep_len(" ", 8L),
                dominoes = dominoes_ranks,
                dominoes_black = dominoes_ranks,
                dominoes_blue = dominoes_ranks,
@@ -246,19 +246,19 @@ get_style_ss <- function(style, big = FALSE) {
                dominoes_red = dominoes_ranks,
                dominoes_white = dominoes_ranks,
                dominoes_yellow = dominoes_ranks,
-               icehouse_pieces = c(rep_len("\u25b2", 5L), "\u25b3"),
-               alquerque = c(rep_len("\u25cf", 5L), "\u25cb"),
-               go = c(rep_len("\u25cf", 5L), "\u25cb"),
-               marbles = c(rep_len("\u25cf", 5L), "\u25cb"),
-               morris = c(rep_len("\u25cf", 5L), "\u25cb"),
-               reversi = c("\u26c3", "\u26c1", rep_len("\u26c3", 4L)))
+               icehouse_pieces = c(rep_len("\u25b2", 5L), "\u25b3", rep_len("\u25b2", 2L)),
+               alquerque = c(rep_len("\u25cf", 5L), "\u25cb", rep_len("\u25cf", 2L)),
+               go = c(rep_len("\u25cf", 5L), "\u25cb", rep_len("\u25cf", 2L)),
+               marbles = c(rep_len("\u25cf", 5L), "\u25cb", rep_len("\u25cf", 2L)),
+               morris = c(rep_len("\u25cf", 5L), "\u25cb", rep_len("\u25cf", 2L)),
+               reversi = c(rep_len("\u26c3", 5L), "\u26c1", rep_len("\u26c3", 2L)))
     ss
 }
 
 # We usually use non-solid version of glyph for "white" hence "black" is appropriate
 # For dice/dominoe/icehouse pips use "br_black" as an hack for inability to do inverted black/white pips
 #### For Game Bit font style use inverted pip feature?
-suit_colors <- c("red", "black", "green", "blue", "yellow", "black")
+suit_colors <- c("red", "black", "green", "blue", "yellow", "black", "cyan", "magenta")
 dice_colors <- suit_colors
 dice_colors[2] <- "br_black"
 
@@ -395,7 +395,7 @@ clean_df <- function(df) {
     # reversi
     reversi_flip <- df$cfg == "reversi" & df$piece_side == "bit_back"
     df$piece_side <- ifelse(reversi_flip, "bit_face", df$piece_side)
-    df$suit <- ifelse(reversi_flip, c(3L, 6L, 1L, 5L, 4L, 2L)[df$suit], df$suit)
+    df$suit <- ifelse(reversi_flip, c(7L, 6L, 8L, 5L, 4L, 2L, 1L, 3L)[df$suit], df$suit)
 
     attr(df, "was_cleaned") <- TRUE
     df
