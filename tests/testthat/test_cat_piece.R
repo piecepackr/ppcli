@@ -321,6 +321,12 @@ test_that("text diagrams", {
 		cat_piece(df)
 	})
 
+	# cubes
+	expect_snapshot({
+		dfs <- tibble(piece_side = "bit_back", x = 1:6, y = 1, suit = 1:6, cfg = "cubes")
+		cat_piece(dfs)
+	})
+
 	# morris
 	expect_snapshot({
 		df2 <- tibble(piece_side = "board_face", x = 2, y = 2, rank = 2L, suit = 3L, cfg = "morris")

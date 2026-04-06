@@ -260,6 +260,7 @@ get_style_rs <- function(style, big = FALSE) {
 		dominoes_yellow = dominoes_ranks,
 		icehouse_pieces = rep(" ", 6L),
 		alquerque = rep_len("\u25cf", 6L),
+		cubes = rep_len("\u25a0", 6L),
 		go = rep_len("\u25cf", 6L),
 		marbles = rep_len("\u25cf", 9L),
 		morris = rep_len("\u25cf", 9L),
@@ -323,6 +324,7 @@ get_style_ss <- function(style, big = FALSE) {
 		dominoes_yellow = dominoes_ranks,
 		icehouse_pieces = c(rep_len("\u25b2", 5L), "\u25b3", rep_len("\u25b2", 2L)),
 		alquerque = c(rep_len("\u25cf", 5L), "\u25cb", rep_len("\u25cf", 2L)),
+		cubes = c(rep_len("\u25a0", 5L), "\u25a1", rep_len("\u25a0", 2L)),
 		go = c(rep_len("\u25cf", 5L), "\u25cb", rep_len("\u25cf", 2L)),
 		marbles = c(rep_len("\u25cf", 5L), "\u25cb", rep_len("\u25cf", 2L)),
 		morris = c(rep_len("\u25cf", 5L), "\u25cb", rep_len("\u25cf", 2L)),
@@ -360,6 +362,7 @@ get_style_fg <- function(style) {
 		dominoes_yellow = rep_len(dice_colors[5L], 7L),
 		icehouse_pieces = dice_colors,
 		alquerque = suit_colors,
+		cubes = suit_colors,
 		go = suit_colors,
 		marbles = suit_colors,
 		morris = suit_colors,
@@ -514,7 +517,7 @@ clean_df <- function(df) {
 	)
 
 	# Go stones and marbles should be "bit_back"
-	bit_back_cfgs <- c("alquerque", "go", "marbles", "morris")
+	bit_back_cfgs <- c("alquerque", "cubes", "go", "marbles", "morris")
 	df$piece_side <- ifelse(
 		df$piece_side == "bit_face" & df$cfg %in% bit_back_cfgs,
 		"bit_back",
