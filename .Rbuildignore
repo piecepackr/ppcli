@@ -25,3 +25,4 @@ tmp
 ^\.pre-commit-config.yaml$
 ^Dockerfile$
 ^\.dockerignore$
+^\.claude$
