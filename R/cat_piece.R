@@ -27,14 +27,31 @@
 #' cat_piece(df)
 #' cat_piece(df, annotate = TRUE)
 #' @export
-cat_piece <- function(df, color = NULL, reorient = "none", annotate = FALSE, ...,
-                      file = "", annotation_scale = NULL,
-                      style = c("Unicode", "Game Bit Mono", "Game Bit Duo"),
-                      xbreaks = NULL, ybreaks = NULL) {
-    color <- color %||% (is.null(file) || file == "")
-    s <- str_piece(df, color = color, reorient = reorient, annotate = annotate,
-                   annotation_scale = annotation_scale, style = style,
-                   xbreaks = xbreaks, ybreaks = ybreaks)
-    if (!is.null(file)) cat(s, ..., file = file)
-    invisible(s)
+cat_piece <- function(
+	df,
+	color = NULL,
+	reorient = "none",
+	annotate = FALSE,
+	...,
+	file = "",
+	annotation_scale = NULL,
+	style = c("Unicode", "Game Bit Mono", "Game Bit Duo"),
+	xbreaks = NULL,
+	ybreaks = NULL
+) {
+	color <- color %||% (is.null(file) || file == "")
+	s <- str_piece(
+		df,
+		color = color,
+		reorient = reorient,
+		annotate = annotate,
+		annotation_scale = annotation_scale,
+		style = style,
+		xbreaks = xbreaks,
+		ybreaks = ybreaks
+	)
+	if (!is.null(file)) {
+		cat(s, ..., file = file)
+	}
+	invisible(s)
 }
