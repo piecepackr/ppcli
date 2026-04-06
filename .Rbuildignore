@@ -18,6 +18,10 @@ tmp
 ^.lintr$
 ^_pkgdown.yml$
 ^.travis.yml$
+^\.air.toml$
+^\.editorconfig$
+^\.git$
 ^\.github$
+^\.pre-commit-config.yaml$
 ^Dockerfile$
 ^\.dockerignore$
