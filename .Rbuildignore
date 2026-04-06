@@ -8,7 +8,7 @@ rule_ideas.rst
 html
 others
 ^pkgdown$
-raw-data
+data-raw
 tmp
 .*.epub
 .*.gif
