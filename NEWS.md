@@ -1,7 +1,7 @@
-ppcli 0.2.2 (development)
+ppcli 0.3.0 (development)
 =========================
 
-* No user-facing changes.
+* `cat_piece()` and `str_piece()` add support for "cubes" bit pieces (#4).
 
 ppcli 0.2.1
 ===========
