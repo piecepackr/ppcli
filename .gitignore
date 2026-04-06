@@ -8,6 +8,7 @@
 codecov.yml
 README.html
 
+.claude/
 html/
 others/
 tmp/
