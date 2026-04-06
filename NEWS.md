@@ -1,3 +1,8 @@
+ppcli 0.2.2 (development)
+=========================
+
+* No user-facing changes.
+
 ppcli 0.2.1
 ===========
 
