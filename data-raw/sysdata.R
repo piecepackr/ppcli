@@ -740,7 +740,7 @@ r225[["\u25b3"]] <- "\u25ff"
 r270[["\u25b3"]] <- "\u25b7"
 r315[["\u25b3"]] <- "\u25f9"
 # Various Symmetric Circles
-for (circle in c("\u25cb", "\u25cc", "\u25ce", "\u25cf", "\u20dd")) {
+for (circle in c("\u25c9", "\u25cb", "\u25cc", "\u25ce", "\u25cf", "\u20dd")) {
 	r45[[circle]] <- circle
 	r90[[circle]] <- circle
 	r135[[circle]] <- circle

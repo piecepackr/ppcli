@@ -15,7 +15,6 @@ test_that("text diagrams", {
 	f <- tempfile()
 	expect_equal(cat_piece(tibble(), file = f), character())
 	unlink(f)
-	expect_warning(capture.output(cat_piece(tibble(piece_side = "saucer_face", x = 2, y = 2))))
 	expect_error(cat_piece(tibble(
 		piece_side = "pyramid_top",
 		x = 2,
@@ -159,6 +158,17 @@ test_that("text diagrams", {
 		)
 		df <- dplyr::bind_rows(dfpt, dfbt, dfc, dfd, dfp)
 		cat_piece(df)
+	})
+
+	# saucers
+	expect_snapshot({
+		dfs <- tibble(
+			piece_side = rep(c("saucer_face", "saucer_back"), 2),
+			x = 1:4,
+			y = 1,
+			suit = 1:4
+		)
+		cat_piece(dfs)
 	})
 
 	# misc

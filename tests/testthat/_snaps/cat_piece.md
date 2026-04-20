@@ -113,6 +113,18 @@
 ---
 
     Code
+      dfs <- tibble(piece_side = rep(c("saucer_face", "saucer_back"), 2), x = 1:4, y = 1,
+      suit = 1:4)
+      cat_piece(dfs)
+    Output
+                
+        ◉ ◎ ◉ ◎ 
+                
+                
+
+---
+
+    Code
       dft <- tibble(piece_side = "tile_face", x = c(1.5, 3.5), y = 1.5, suit = 1,
       rank = 4, angle = c(90, 270))
       dfpb <- tibble(piece_side = "pawn_back", x = 1:2, y = 1, suit = 2:1, angle = c(

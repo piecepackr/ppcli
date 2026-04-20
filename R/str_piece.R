@@ -572,7 +572,10 @@ add_piece <- function(
 	reorient = "none",
 	style = get_style()
 ) {
-	if (piece_side %in% c("tile_back", "coin_face", "card_back", "board_face", "board_back")) {
+	if (
+		piece_side %in%
+			c("tile_back", "coin_face", "card_back", "board_face", "board_back", "saucer_back")
+	) {
 		fg <- "black"
 	} else {
 		if (grepl("pyramid", piece_side)) {
@@ -600,7 +603,9 @@ add_piece <- function(
 				"pawn_face",
 				"pawn_back",
 				"board_face",
-				"board_back"
+				"board_back",
+				"saucer_face",
+				"saucer_back"
 			))
 	) {
 		if (piece_side == "tile_face") {
@@ -636,6 +641,8 @@ add_piece <- function(
 		piece_side,
 		coin_back = add_coin_back(cm, ss, x, y, angle, fg, style),
 		coin_face = add_coin_face(cm, rs, x, y, angle, fg, style),
+		saucer_back = add_saucer_back(cm, x, y, fg),
+		saucer_face = add_saucer_face(cm, x, y, fg),
 		die_face = add_die_face(cm, rs, x, y, angle, fg, cfg, style, suit),
 		pawn_face = add_pawn_face(cm, ss, x, y, angle, fg, style),
 		pawn_back = add_pawn_back(cm, ss, x, y, angle, fg, style),
@@ -781,6 +788,16 @@ add_coin_back <- function(cm, ss, x, y, angle, fg, style) {
 add_coin_face <- function(cm, rs, x, y, angle, fg, style) {
 	enclosing_coin <- style$rotate(style$combining$coin, angle)
 	cm$char[y, x] <- paste0(rs, enclosing_coin)
+	cm$fg[y, x] <- fg
+	cm
+}
+add_saucer_back <- function(cm, x, y, fg) {
+	cm$char[y, x] <- "\u25ce"
+	cm$fg[y, x] <- fg
+	cm
+}
+add_saucer_face <- function(cm, x, y, fg) {
+	cm$char[y, x] <- "\u25c9"
 	cm$fg[y, x] <- fg
 	cm
 }
