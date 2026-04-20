@@ -755,6 +755,11 @@ r90[["\U000FCE50"]] <- "\U000FCE5C" # Game Bit PUA
 r180[["\U000FCE50"]] <- "\U000FCE58"
 r270[["\U000FCE50"]] <- "\U000FCE54"
 
+# Enclosing Pawn Saucer (with directional mark)
+r90[["\U000FCE51"]] <- "\U000FCE5D" # Game Bit PUA
+r180[["\U000FCE51"]] <- "\U000FCE59"
+r270[["\U000FCE51"]] <- "\U000FCE55"
+
 # Enclosing Pawn
 r45[["\u20df"]] <- "\u20de"
 r90[["\u20df"]] <- "\u20df"

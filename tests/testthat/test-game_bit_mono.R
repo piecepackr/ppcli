@@ -17,6 +17,19 @@ test_that("Dominoes", {
 	expect_snapshot(cat_piece(df))
 })
 
+test_that("saucers", {
+	skip_if_not_installed("tibble")
+	library("tibble")
+	dfs <- tibble(
+		piece_side = rep(c("saucer_face", "saucer_back"), each = 4),
+		x = rep(1:4, 2),
+		y = rep(1:2, each = 4),
+		angle = rep(c(0, 90, 180, 270), 2),
+		suit = rep(1:4, 2)
+	)
+	expect_snapshot(cat_piece(dfs))
+})
+
 # https://github.com/piecepackr/ppcli/issues/3
 test_that("Can't rotate boards", {
 	skip_if_not_installed("ppdf", "0.2.0-13")

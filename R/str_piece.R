@@ -194,7 +194,8 @@ get_style_combining <- function(style) {
 		dice_numeral = die_suits
 	)
 
-	list(coin = coin, die = die, pawn = pawn)
+	saucer <- if (style == "unicode") NULL else "\U000FCE51"
+	list(coin = coin, die = die, pawn = pawn, saucer = saucer)
 }
 
 get_style_rs <- function(style, big = FALSE) {
@@ -641,8 +642,8 @@ add_piece <- function(
 		piece_side,
 		coin_back = add_coin_back(cm, ss, x, y, angle, fg, style),
 		coin_face = add_coin_face(cm, rs, x, y, angle, fg, style),
-		saucer_back = add_saucer_back(cm, x, y, fg),
-		saucer_face = add_saucer_face(cm, x, y, fg),
+		saucer_back = add_saucer_back(cm, x, y, angle, fg, style),
+		saucer_face = add_saucer_face(cm, ss, x, y, angle, fg, style),
 		die_face = add_die_face(cm, rs, x, y, angle, fg, cfg, style, suit),
 		pawn_face = add_pawn_face(cm, ss, x, y, angle, fg, style),
 		pawn_back = add_pawn_back(cm, ss, x, y, angle, fg, style),
@@ -791,13 +792,23 @@ add_coin_face <- function(cm, rs, x, y, angle, fg, style) {
 	cm$fg[y, x] <- fg
 	cm
 }
-add_saucer_back <- function(cm, x, y, fg) {
-	cm$char[y, x] <- "\u25ce"
+add_saucer_back <- function(cm, x, y, angle, fg, style) {
+	if (is.null(style$combining$saucer)) {
+		cm$char[y, x] <- "\u25ce"
+	} else {
+		enclosing_saucer <- style$rotate(style$combining$saucer, angle)
+		cm$char[y, x] <- paste0(style$space, enclosing_saucer)
+	}
 	cm$fg[y, x] <- fg
 	cm
 }
-add_saucer_face <- function(cm, x, y, fg) {
-	cm$char[y, x] <- "\u25c9"
+add_saucer_face <- function(cm, ss, x, y, angle, fg, style) {
+	if (is.null(style$combining$saucer)) {
+		cm$char[y, x] <- "\u25c9"
+	} else {
+		enclosing_saucer <- style$rotate(style$combining$saucer, angle)
+		cm$char[y, x] <- paste0(ss, enclosing_saucer)
+	}
 	cm$fg[y, x] <- fg
 	cm
 }
