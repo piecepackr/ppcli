@@ -6,6 +6,8 @@ test_that("text diagrams", {
 	skip_if_not_installed("withr")
 	library("tibble")
 
+	expect_warning(capture.output(cat_piece(tibble(piece_side = "token_face", x = 2, y = 2))))
+
 	style <- get_style("unicode")
 	expect_warning(style$rotate("$", 90))
 	expect_warning(style$rotate("&", 180))

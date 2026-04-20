@@ -19,6 +19,18 @@
         │󼨀│ │󼨄│          
         └─┘ └─┘          
 
+# saucers
+
+    Code
+      cat_piece(dfs)
+    Output
+                
+         󼹑  󼹝  󼹙  󼹕 
+                
+        󼰀󼹑 󼰍󼹝 󼰊󼹙 󼰇󼹕 
+                
+                
+
 # Can't rotate boards
 
     Code
