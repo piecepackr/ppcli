@@ -7,6 +7,7 @@
 #'              If `FALSE` won't colorize output at all.
 #'              If `"html"` will colorize output for html.
 #'              Otherwise will colorize output for the terminal using ANSI CSI SGR control sequences.
+#'              See [cli::ansi_palettes] to customize the colors used.
 #' @param reorient Determines whether and how we should reorient (the angle) of pieces or symbols:\enumerate{
 #'        \item{The default "none" (or `FALSE`) means don't reorient any pieces/symbols.}
 #'        \item{"all" (or `TRUE`) means setting the angle to zero for all pieces
@@ -129,9 +130,11 @@ str_piece_helper <- function(
 	text <- rev(apply(cm$char, 1, function(x) paste(x, collapse = "")))
 	text <- paste(text, collapse = "\n")
 	if (color == "html") {
+		# cli::ansi_html() drops background colors from subsequent spans when
+		# only the foreground changes; ansi_simplify() does not help
+		# see https://github.com/r-lib/cli/issues/752
 		assert_suggested("fansi")
 		text <- fansi::sgr_to_html(text)
-		# text <- cli::ansi_html(text)
 	}
 	paste0(text, "\n")
 }

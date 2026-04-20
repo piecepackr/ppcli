@@ -22,7 +22,8 @@ str_piece(
 \item{color}{How should the text be colorized.
 If \code{FALSE} won't colorize output at all.
 If \code{"html"} will colorize output for html.
-Otherwise will colorize output for the terminal using ANSI CSI SGR control sequences.}
+Otherwise will colorize output for the terminal using ANSI CSI SGR control sequences.
+See \link[cli:ansi_palettes]{cli::ansi_palettes} to customize the colors used.}
 
 \item{reorient}{Determines whether and how we should reorient (the angle) of pieces or symbols:\enumerate{
 \item{The default "none" (or \code{FALSE}) means don't reorient any pieces/symbols.}
