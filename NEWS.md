@@ -1,7 +1,10 @@
 ppcli 0.3.0 (development)
 =========================
 
-* `cat_piece()` and `str_piece()` add support for "cubes" bit pieces (#4).
+* `cat_piece()` and `str_piece()` adds support for the following game pieces (#4):
+
+  + "cubes" bit pieces
+  + (piecepack) saucers
 
 ppcli 0.2.1
 ===========
